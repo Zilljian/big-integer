@@ -5,6 +5,7 @@ BigInteger::BigInteger() :  number(), length(0), sign(false) {
 
 BigInteger::BigInteger(std::string initString) :  number(), length(0), sign(false) {
     sign = initString[0] == '-' ? true: false;
+    initString.erase(0,1);
     toStringVar = initString;
     initBigInteger(initString);
     initStack();
@@ -206,10 +207,11 @@ bool BigInteger::isNegative() {
 
 
 void BigInteger::initBigInteger(std::string initString) {
+    while(initString[0] == '0' && (initString.size() > 1)) initString.erase(0,1);
+
     for (int i = 0; initString[i] != '\0'; i++) {
         if (initString[i] != '-') number.push_back(int(initString[i]) - 48);
     }
-
     length = number.size();
 }
 
