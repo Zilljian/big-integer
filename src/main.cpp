@@ -9,4 +9,7 @@ int main() {
     BigInteger newIntSub = newInt2 - newInt;
     std::cout << newIntSum.toString() << std::endl;
     std::cout << newIntSub.toString() << std::endl;
+    std::cout << newInt;
+    std::cin >> newInt;
+    std::cout << std::endl << newInt;
 }

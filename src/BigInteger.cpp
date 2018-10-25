@@ -1,12 +1,12 @@
 #include "BigInteger.h"
 
-BigInteger::BigInteger() :  number(), length(0), sign(false) {
-}
+BigInteger::BigInteger() :  number(), length(0), sign(false) {}
 
 BigInteger::BigInteger(std::string initString) :  number(), length(0), sign(false) {
-    sign = initString[0] == '-' ? true: false;
-    initString.erase(0,1);
-    toStringVar = initString;
+    if (initString[0] == '-') {
+        initString.erase(0,1);
+        sign = true;
+    }
     initBigInteger(initString);
     initStack();
 }
@@ -14,6 +14,7 @@ BigInteger::BigInteger(std::string initString) :  number(), length(0), sign(fals
 BigInteger::BigInteger(std::vector<int> initVector) : number(), length(0), sign(false) {
     number.insert(number.begin(), initVector.begin(), initVector.end());
     length = number.size();
+    stringBuilder();
     initStack();
 }
 
@@ -21,6 +22,7 @@ BigInteger::BigInteger(std::vector<int> initVector, bool sign) : number(), lengt
     this->sign = sign;
     number.insert(number.begin(), initVector.begin(), initVector.end());
     length = number.size();
+    stringBuilder();
     initStack();
 }
 
@@ -192,6 +194,52 @@ bool BigInteger::operator != (BigInteger &rightExpr){
     } else return true;
 }
 
+std::ostream& operator << (std::ostream& out, const BigInteger& value) {
+    out << value.toStringVar;
+    out.flush();
+    return out;
+}
+
+std::istream& operator >> (std::istream& in, BigInteger& value) {
+    char buffer;
+    std::string temp;
+    in.get(buffer);
+
+    if (buffer != '\n') {
+        value.number.erase(value.number.begin(), value.number.end());
+        value.length = 0;
+        value.sign = false;
+        while (buffer != '\n') {
+            temp += buffer;
+            in.get(buffer);
+        }
+    }
+
+    while((temp[0] == '0' && (temp.size() > 1)) || temp[0] == '-') {
+        if (temp[0] == '-') value.sign = true;
+        temp.erase(0,1);
+    }
+
+    if (temp[0] == '-') {
+        value.sign = true;
+        temp.erase(0,1);
+    }
+
+    for (int i = 0; temp[i] != '\0'; i++) {
+        if (temp[i] != '-') value.number.push_back(int(temp[i]) - 48);
+    }
+
+    value.toStringVar = value.sign ? "-" : "";
+    value.length = value.number.size();
+
+    for (int i = 0; i < value.length; i++) {
+        value.toStringVar += std::to_string(value.number[i]);
+    }
+
+    return in;
+}
+
+
 std::vector<int> BigInteger::getVector(){
     return number;
 }
@@ -213,6 +261,7 @@ void BigInteger::initBigInteger(std::string initString) {
         if (initString[i] != '-') number.push_back(int(initString[i]) - 48);
     }
     length = number.size();
+    stringBuilder();
 }
 
 void BigInteger::stringBuilder() {

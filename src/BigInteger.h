@@ -2,6 +2,7 @@
 #include <string>
 #include <stack>
 #include <algorithm>
+#include <iostream>
 #ifndef BIG_INTEGER_BIGINTEGER_H
 #define BIG_INTEGER_BIGINTEGER_H
 
@@ -25,8 +26,8 @@ public:
     bool operator > (BigInteger&);
     bool operator == (BigInteger&);
     bool operator != (BigInteger&);
-    BigInteger operator << (BigInteger);
-    BigInteger operator >> (BigInteger);
+    friend std::ostream& operator << (std::ostream&,const BigInteger&);
+    friend std::istream& operator >> (std::istream&,BigInteger&);
     std::string toString();
     std::vector<int> getVector();
     bool isNegative ();
